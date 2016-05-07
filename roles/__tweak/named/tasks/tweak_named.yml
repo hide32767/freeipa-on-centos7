@@ -1,0 +1,21 @@
+---
+
+- name: be sure named dnssec disabled
+  lineinfile: >
+    dest=/etc/named.conf
+    backrefs=yes
+    regexp='^(\t+dnssec-enable).*$'
+    line='\1 no;'
+  notify:
+    - RESTART_IPA
+
+- name: be sure named dnssec-validation disabled
+  lineinfile: >
+    dest=/etc/named.conf
+    backrefs=yes
+    regexp='^(\t+dnssec-validation).*$'
+    line='\1 no;'
+  notify:
+    - RESTART_IPA
+
+...

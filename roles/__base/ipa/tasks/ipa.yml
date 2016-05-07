@@ -1,0 +1,27 @@
+---
+
+- name: be sure our hosts existed
+  template: >
+    src=hosts.j2
+    dest=/etc/hosts
+    mode=644
+    owner=root
+    group=root
+  register: hosts
+
+- name: be sure our hosts updated
+  command: touch /etc/hosts
+  when: hosts|changed
+
+- name: be sure IPA server packages installed
+  yum: name={{ item }}
+  with_items: '{{ ipa.packages }}'
+
+- name: be sure SSLv3 used by NSSProtocol on httpd disabled
+  lineinfile: >
+    dest=/etc/httpd/conf.d/nss.conf
+    backrefs=yes
+    regexp='^NSSProtocol .*SSLv3'
+    line='NSSProtocol TLSv1.0,TLSv1.1,TLSv1.2'
+
+...

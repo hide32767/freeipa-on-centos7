@@ -1,0 +1,36 @@
+---
+
+- name: be sure yum-utils installed
+  yum: name=yum-utils
+
+- name: be sure SELinux disabled
+  selinux: state=disabled
+  notify:
+    - REBOOT_TARGET
+
+- name: be sure firewalld disabled
+  service: name=firewalld state=stopped enabled=no
+
+- name: checking to "ja_JP.utf8" language environment existed
+  shell: locale -a | grep -q 'ja_JP.utf8'
+  register: locale
+  always_run: yes
+  failed_when: no
+  changed_when: locale.rc != 0
+
+- name: be sure "ja_JP.utf8" language environment existed
+  command: localedef -i ja_JP -f UTF-8 ja_JP.utf8
+  when: locale|changed
+
+- name: checking to our timezone set
+  shell: timedatectl | grep 'Time zone' | grep -q "{{ timezone }}"
+  register: tz
+  always_run: yes
+  failed_when: no
+  changed_when: tz.rc != 0
+
+- name: be sure our timezone set
+  command: timedatectl set-timezone "{{ timezone }}"
+  when: tz|changed
+
+...

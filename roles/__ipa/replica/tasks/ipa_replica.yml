@@ -1,0 +1,30 @@
+---
+
+- name: be sure our hostname set
+  hostname: name={{ ipa.replica.hostname }}
+
+- name: be sure gpg-key for IPA replica existed
+  copy: >
+    src=replica-info-{{ ipa.replica.hostname }}.gpg
+    dest=/var/lib/ipa/replica-info-{{ ipa.replica.hostname }}.gpg
+    mode=600
+    owner=root
+    group=root
+
+- name: be sure IPA replica ready
+  command: |
+    ipa-replica-install \
+      --unattended \
+      --setup-ca \
+      --password={{ ipa.dm_password }} \
+      --admin-password={{ ipa.admin_password }} \
+      --setup-dns \
+      --ip-address={{ ipa.replica.ipaddr }} \
+      --no-forwarders \
+      /var/lib/ipa/replica-info-{{ ipa.replica.hostname }}.gpg
+    creates=/etc/ipa/ca.crt
+
+- name: be sure ipa service started
+  service: name=ipa state=started enabled=yes
+
+...

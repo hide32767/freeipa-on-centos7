@@ -1,0 +1,39 @@
+---
+
+- name: be sure our hostname set
+  hostname: name={{ ipa.master.hostname }}
+
+- name: be sure IPA server ready
+  command: |
+    ipa-server-install \
+      --unattended \
+      --hostname={{ ipa.master.hostname }} \
+      --domain={{ ipa.domain_name }} \
+      --realm={{ ipa.realm_name }} \
+      --ds-password={{ ipa.dm_password }} \
+      --admin-password={{ ipa.admin_password }} \
+      --setup-dns \
+      --ip-address={{ ipa.master.ipaddr }} \
+      --no-forwarders \
+    creates=/etc/ipa/ca.crt
+
+- name: be sure ipa service started
+  service: name=ipa state=started enabled=yes
+
+- name: be sure the gpg-key for IPA replica existed
+  command: |
+    ipa-replica-prepare \
+      --password={{ ipa.dm_password }} \
+      --ip-address={{ ipa.replica.ipaddr }} \
+      {{ ipa.replica.hostname }} \
+    creates=/var/lib/ipa/replica-info-{{ ipa.replica.hostname }}.gpg
+
+- name: be sure the gpg-key for IPA replica fetched
+  fetch: >
+    src=/var/lib/ipa/replica-info-{{ ipa.replica.hostname }}.gpg
+    dest=roles/__ipa/replica/files/replica-info-{{ ipa.replica.hostname }}.gpg
+    flat=yes
+    fail_on_missing=yes
+    validate_checksum=yes
+
+...

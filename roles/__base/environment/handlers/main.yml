@@ -1,0 +1,6 @@
+---
+
+- name: REBOOT_TARGET
+  command: echo 'You must reboot target node provisioned by this playbook.'
+
+...

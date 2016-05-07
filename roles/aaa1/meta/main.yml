@@ -1,0 +1,10 @@
+---
+
+dependencies:
+  - { role: __base/environment }
+  - { role: __base/ipa }
+  - { role: __tweak/resolver }
+  - { role: __ipa/master }
+  - { role: __tweak/named }
+
+...

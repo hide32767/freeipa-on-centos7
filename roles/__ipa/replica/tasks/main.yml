@@ -1,0 +1,6 @@
+---
+
+- include: ipa_replica.yml
+  tags: ipa_replica
+
+...

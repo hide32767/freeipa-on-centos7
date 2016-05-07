@@ -1,0 +1,22 @@
+---
+
+scp_user: vagrant
+
+timezone: 'Asia/Tokyo'
+
+ipa:
+  master:
+    hostname: aaa1.example.local
+    ipaddr: 192.168.33.10
+  replica:
+    hostname: aaa2.example.local
+    ipaddr: 192.168.33.20
+  realm_name: EXAMPLE.LOCAL
+  domain_name: example.local
+  dm_password: <YOUR_DM_PASSWORD>
+  admin_password: <YOUR_ADMIN_PASSWORD>
+  packages:
+    - ipa-server
+    - ipa-server-dns
+
+...

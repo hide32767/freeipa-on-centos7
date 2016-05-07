@@ -1,0 +1,6 @@
+---
+
+- include: ipa_master.yml
+  tags: ipa_master
+
+...
