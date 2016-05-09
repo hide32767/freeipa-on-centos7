@@ -8,6 +8,10 @@
  - `ansible_spec`
 - To set login configuration to `~/.ssh/config` for servers.
 
+## first
+
+You should rewrite several parameters in 'group_vars/all', to your parameters.
+
 ## test
 
 ```
